@@ -36,3 +36,8 @@ variable "service_account_email" {
   description = "The email of the SA used by Terraform"
   type        = string
 }
+
+variable "argocd_admin_password" {
+  description = "Admin password for ArgoCD"
+  type        = string
+}

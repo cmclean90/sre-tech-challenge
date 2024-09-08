@@ -35,3 +35,8 @@ resource "google_container_node_pool" "primary_nodes" {
     max_node_count = 5
   }
 }
+
+module "argocd" {
+  source = "./modules/argocd"
+  argocd_admin_password = var.argocd_admin_password
+}

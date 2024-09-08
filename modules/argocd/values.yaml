@@ -1,0 +1,10 @@
+# This file contains values to override the default Helm chart values during deployment.
+# It allows for more flexible configurations without altering the Helm chart directly.
+server:
+ # Here i'm configuring the ArgoCD server service type to be ClusterIP, meaning that the service
+ # will only be accessible from within the Kubernetes cluster.
+  service:
+    type: ClusterIP
+ # Here, i'm disabling ingress for now as we're only accessing ArgoCD within the cluster.
+  ingress:
+    enabled: false
