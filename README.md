@@ -12,6 +12,14 @@ This repository contains the solutions to the SRE Tech Challenge.
 - **Related Pull Request**: [Task 1 PR](https://github.com/cmclean90/sre-tech-challenge/pull/1)
 - **Detailed Documentation**: [Task 1 Documentation](./documentation/task1_k8s_cluster.md)
 
+### Task 2: Deploy ArgoCD
+- **Status**: Completed
+- **Description**: ArgoCD was deployed using Helm in the `argo` namespace, allowing for application management and GitOps-style deployments. A hashed admin password was securely passed via Terraform.
+- **Testing**: Deployed a sample Helm application (`test-app`) to ensure ArgoCD was functioning correctly. The app's sync status and health were verified in the ArgoCD dashboard.
+- **Production Readiness**: Security, scalability, and disaster recovery considerations were documented for production environments.
+- **Related Pull Request**: [Task 2 PR](https://github.com/cmclean90/sre-tech-challenge/pull/2)
+- **Detailed Documentation**: [Task 2 Documentation](./documentation/task2_argocd_deployment.md)
+
 ## How to Run
 *This section will be updated once the repository contains full instructions on how to deploy the entire stack.*
 
