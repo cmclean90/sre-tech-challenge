@@ -1,5 +1,3 @@
-
-
 # Defining the Kubernetes namespace where ArgoCD will be deployed.
 # The namespace is named "argo" and will be used throughout the deployment.
 resource "kubernetes_namespace" "argocd" {
