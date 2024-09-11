@@ -36,7 +36,15 @@ resource "google_container_node_pool" "primary_nodes" {
   }
 }
 
+# Using the argocd module to manage the deployment of ArgoCD.
+# The admin password for ArgoCD is set using a variable passed to this module.
 module "argocd" {
   source = "./modules/argocd"
   argocd_admin_password = var.argocd_admin_password
+}
+
+# Using the keycloak module to manage the deployment of Keycloak.
+# This module handles the installation and configuration of Keycloak.
+module "keycloak" {
+  source = "./modules/keycloak"
 }

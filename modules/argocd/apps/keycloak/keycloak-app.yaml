@@ -1,0 +1,87 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  # The name of the ArgoCD application, which will manage Keycloak as an app in ArgoCD.
+  name: keycloak-app
+  namespace: argo
+spec:
+  # Specifies the ArgoCD project under which the application is created.
+  project: default
+  source:
+    # The Helm chart repository URL for Bitnami, where the Keycloak Helm chart is located.
+    repoURL: https://charts.bitnami.com/bitnami
+    # The specific version of the Keycloak Helm chart to deploy.
+    targetRevision: 22.2.2
+    # The name of the Helm chart being deployed, in this case, Keycloak.
+    chart: keycloak
+    helm:
+      values: |
+        # Configuring Keycloak’s service type to be ClusterIP, meaning it is accessible
+        # only within the Kubernetes cluster for now.
+        service:
+          type: ClusterIP
+        
+        # Setting Keycloak environment variables to enable debug logging and import the realm.
+        keycloak:
+          # Enabling detailed debug logs for troubleshooting.
+          extraEnv:
+            - name: KEYCLOAK_LOGLEVEL
+              value: "DEBUG"
+            # Importing the realm configuration from the mounted ConfigMap.
+            - name: KEYCLOAK_IMPORT
+              value: "/config/myrealm.json"
+            # Injecting user passwords from Kubernetes secrets as environment variables.
+            - name: TESTUSER1_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-user-passwords
+                  key: testuser1-password
+            - name: TESTUSER2_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-user-passwords
+                  key: testuser2-password
+            # Injecting OIDC key from Kubernetes secrets as environment variables.
+            - name: ARGOCD_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: argo-oidc-secret
+                  key: oidc.keycloak.clientSecret
+                  
+          # Adding the volume where the realm configuration (from the ConfigMap) is mounted.
+          extraVolumes:
+            - name: realm-config
+              configMap:
+                name: myrealm-config
+
+          # Mounting the realm configuration at `/config` inside the Keycloak container.
+          extraVolumeMounts:
+            - name: realm-config
+              mountPath: /config
+        
+        # Configuration for Keycloak Config CLI job, which applies the imported realm config.
+        keycloakConfigCli:
+          enabled: true
+          extraEnvVars:
+            # Specifying the file location for realm import inside the Config CLI.
+            - name: IMPORT_FILES_LOCATIONS
+              value: "/config/myrealm.json"
+          extraVolumes:
+            - name: realm-config
+              configMap:
+                name: myrealm-config
+          extraVolumeMounts:
+            - name: realm-config
+              mountPath: /config
+
+  destination:
+    # The Kubernetes API server to which the application will be deployed.
+    server: https://kubernetes.default.svc
+    # The namespace where Keycloak will be deployed.
+    namespace: identity
+
+  # Enabling automated synchronization and self-healing for the application.
+  syncPolicy:
+    automated:
+      prune: true  # Automatically remove resources that are no longer defined.
+      selfHeal: true  # Automatically fix resources that drift from the desired state.
