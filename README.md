@@ -20,6 +20,14 @@ This repository contains the solutions to the SRE Tech Challenge.
 - **Related Pull Request**: [Task 2 PR](https://github.com/cmclean90/sre-tech-challenge/pull/2)
 - **Detailed Documentation**: [Task 2 Documentation](./documentation/task2_argocd_deployment.md)
 
+### Task 3: Deploy Keycloak for User Authentication with ArgoCD
+- **Status**: Completed
+- **Description**: Keycloak was deployed using Helm in the `identity` namespace and integrated with ArgoCD using OpenID Connect (OIDC) for authentication. The `identity` namespace was created via Terraform, and Keycloak was deployed and configured through ArgoCD to manage user authentication.
+- **Testing**: Verified the Keycloak login functionality and the OIDC integration with ArgoCD. Authentication via Keycloak for ArgoCD was confirmed, and users were able to log in successfully.
+- **Production Readiness**: Considerations around high availability, security, scalability, and disaster recovery were documented.
+- **Related Pull Request**: [Task 3 PR](https://github.com/cmclean90/sre-tech-challenge/pull/5)
+- **Detailed Documentation**: [Task 3 Documentation](./documentation/task3_keycloak.md)
+
 ## How to Run
 *This section will be updated once the repository contains full instructions on how to deploy the entire stack.*
 
