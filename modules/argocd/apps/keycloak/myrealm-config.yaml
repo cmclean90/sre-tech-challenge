@@ -1,0 +1,88 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  # Defining a ConfigMap that holds the Keycloak realm configuration.
+  name: myrealm-config
+  namespace: identity
+data:
+  myrealm.json: |
+    {
+      # The Keycloak realm being created is called 'mytestrealm'.
+      "realm": "mytestrealm",
+      "enabled": true,
+      # Requiring SSL for external access only, allowing non-SSL traffic internally.
+      "sslRequired": "external",
+      # Disabling user registration to prevent open sign-ups.
+      "registrationAllowed": false,
+      # Enabling login with email addresses.
+      "loginWithEmailAllowed": true,
+      # Ensuring that duplicate email addresses are not allowed for multiple users.
+      "duplicateEmailsAllowed": false,
+      # Allowing users to reset their passwords.
+      "resetPasswordAllowed": true,
+      # Disallowing users from editing their usernames.
+      "editUsernameAllowed": false,
+      
+      # Defining the client configuration for ArgoCD.
+      "clients": [
+        {
+          # Client ID for ArgoCD, which will be used to authenticate via OIDC.
+          "clientId": "argocd",
+          # Secret used by the client (ArgoCD) to authenticate with Keycloak.
+          "secret": "${env.ARGOCD_CLIENT_SECRET}",
+          # Redirect URI where Keycloak will send the authentication response to ArgoCD.
+          "redirectUris": [
+            "https://argocd-server.argo.svc.cluster.local/auth/callback"
+          ],
+          # Marking the client as confidential, meaning it will use a secret to authenticate.
+          "publicClient": false,
+          # Specifying the protocol to use OpenID Connect (OIDC).
+          "protocol": "openid-connect",
+          "standardFlowEnabled": true,  # Enabling the standard OIDC flow.
+          "implicitFlowEnabled": false,  # Disabling implicit flow for security reasons.
+          "directAccessGrantsEnabled": false,
+          "serviceAccountsEnabled": true,
+          "authorizationServicesEnabled": true
+        }
+      ],
+      
+      # Defining users to be created in the realm.
+      "users": [
+        {
+          # First user, 'testuser1', with email and credentials.
+          "username": "testuser1",
+          "email": "testuser1@example.com",
+          "enabled": true,
+          "credentials": [
+            {
+              # Password for 'testuser1' is stored securely using environment variables.
+              "type": "password",
+              "value": "${env.TESTUSER1_PASSWORD}",
+              "temporary": false
+            }
+          ]
+        },
+        {
+          # Second user, 'testuser2', with email and credentials.
+          "username": "testuser2",
+          "email": "testuser2@example.com",
+          "enabled": true,
+          "credentials": [
+            {
+              # Password for 'testuser2' is stored securely using environment variables.
+              "type": "password",
+              "value": "${env.TESTUSER2_PASSWORD}",
+              "temporary": false
+            }
+          ]
+        }
+      ],
+      
+      # Defining the realm roles available in 'mytestrealm'.
+      "roles": {
+        "realm": [
+          {"name": "admin"},  # Administrator role for privileged access.
+          {"name": "user"}  # General user role for standard access.
+        ]
+      }
+    }

@@ -31,3 +31,20 @@ resource "helm_release" "argocd" {
   # so the namespace will be created before deploying ArgoCD.
   depends_on = [kubernetes_namespace.argocd]
 }
+
+# Defining the ArgoCD Application for Keycloak by applying the keycloak-app.yaml file.
+# This resource uses a Kubernetes manifest to deploy Keycloak via ArgoCD.
+resource "kubernetes_manifest" "keycloak_app" {
+  manifest = yamldecode(file("${path.module}/apps/keycloak/keycloak-app.yaml"))
+
+  # Ensure ArgoCD is installed first before applying the Keycloak Application.
+  depends_on = [helm_release.argocd]
+}
+
+# Defining the ArgoCD Application for Keycloak's realm configuration by applying the myrealm-config.yaml file.
+# This resource applies the Keycloak realm configuration via a Kubernetes manifest.
+resource "kubernetes_manifest" "keycloak_realm" {
+  manifest = yamldecode(file("${path.module}/apps/keycloak/myrealm-config.yaml"))
+
+  depends_on = [helm_release.argocd]
+}

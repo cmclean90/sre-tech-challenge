@@ -8,3 +8,29 @@ server:
  # Here, i'm disabling ingress for now as we're only accessing ArgoCD within the cluster.
   ingress:
     enabled: false
+
+# OIDC configuration for Keycloak.
+configs:
+  cm:
+    oidc.config: |
+      # Setting the name of the OIDC provider as Keycloak.
+      name: Keycloak
+      
+      # Issuer URL points to the Keycloak service running inside the Kubernetes cluster.
+      # This allows ArgoCD to authenticate users via the Keycloak realm 'mytestrealm'.
+      issuer: http://keycloak-app.identity.svc.cluster.local/auth/realms/mytestrealm
+      
+      # The client ID for the Keycloak client 'argocd'. This is the client that ArgoCD
+      # will use to authenticate.
+      clientID: argocd
+      
+      # Referencing the client secret stored securely in Kubernetes Secrets.
+      # This client secret is used by ArgoCD to authenticate with Keycloak.
+      clientSecret: $oidc.keycloak.clientSecret
+      
+      # Requested scopes define the level of access required during the OIDC flow.
+      # In this case, we need 'openid', 'profile', 'email', and 'groups'.
+      requestedScopes: ["openid", "profile", "email", "groups"]
+      
+      # Enabling insecureSkipVerify to allow for easier local development without HTTPS.
+      insecureSkipVerify: true
