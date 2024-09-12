@@ -17,7 +17,7 @@ This repository contains the solutions to the SRE Tech Challenge.
 - **Description**: ArgoCD was deployed using Helm in the `argo` namespace, allowing for application management and GitOps-style deployments. A hashed admin password was securely passed via Terraform.
 - **Testing**: Deployed a sample Helm application (`test-app`) to ensure ArgoCD was functioning correctly. The app's sync status and health were verified in the ArgoCD dashboard.
 - **Production Readiness**: Security, scalability, and disaster recovery considerations were documented for production environments.
-- **Related Pull Request**: [Task 2 PR](https://github.com/cmclean90/sre-tech-challenge/pull/2)
+- **Related Pull Request**: [Task 2 PR](https://github.com/cmclean90/sre-tech-challenge/pull/3)
 - **Detailed Documentation**: [Task 2 Documentation](./documentation/task2_argocd_deployment.md)
 
 ### Task 3: Deploy Keycloak for User Authentication with ArgoCD
