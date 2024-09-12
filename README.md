@@ -33,7 +33,7 @@ This repository contains the solutions to the SRE Tech Challenge.
 - **Description**: A monitoring stack using **Prometheus** and **Grafana** was deployed in the `observability` namespace via Terraform and Helm. Custom Grafana dashboards for **ArgoCD** and **Keycloak** were configured, alongside out-of-the-box dashboards and alerts from the **kube-prometheus-stack**. Metrics scraping was enabled for both **ArgoCD** and **Keycloak** using ServiceMonitor and PodMonitor resources.
 - **Testing**: Metrics endpoints were validated for Prometheus scraping using `curl`. Grafana dashboards were tested to confirm metrics visualization.
 - **Production Readiness**: Recommendations were made for alerting, high availability, security, and disaster recovery.
-- **Related Pull Request**: [Optional Task 3 PR](https://github.com/cmclean90/sre-tech-challenge/pull/8)
+- **Related Pull Request**: [Optional Task 3 PR](https://github.com/cmclean90/sre-tech-challenge/pull/7)
 - **Detailed Documentation**: [Optional Task 3 Documentation](./documentation/optional_task3_monitoring.md)
 
 ## How to Run
