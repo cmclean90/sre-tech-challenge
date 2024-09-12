@@ -48,3 +48,9 @@ module "argocd" {
 module "keycloak" {
   source = "./modules/keycloak"
 }
+
+# Using the observability module to manage the deployment of monitoring tools (Prometheus, Grafana, and associated resources).
+# This module handles the setup of namespaces, dashboards, alerts, and ensures Prometheus and Grafana are properly configured for observability.
+module "observability" {
+  source = "./modules/observability"
+}

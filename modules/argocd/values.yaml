@@ -5,6 +5,39 @@ server:
  # will only be accessible from within the Kubernetes cluster.
   service:
     type: ClusterIP
+    annotations:
+      # Prometheus annotations for scraping metrics from ArgoCD server
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "8083"  # Server metrics port
+      prometheus.io/path: "/metrics"
+  metrics:
+    enabled: true
+    service:
+      type: ClusterIP
+      port: 8083  # Server metrics port
+
+controller:
+  metrics:
+    enabled: true
+    service:
+      type: ClusterIP
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8082"  # Application controller metrics port
+        prometheus.io/path: "/metrics"
+      port: 8082
+
+repoServer:
+  metrics:
+    enabled: true
+    service:
+      type: ClusterIP
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8084"  # Repo server metrics port
+        prometheus.io/path: "/metrics"
+      port: 8084
+  
  # Here, i'm disabling ingress for now as we're only accessing ArgoCD within the cluster.
   ingress:
     enabled: false
