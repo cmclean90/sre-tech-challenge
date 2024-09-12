@@ -49,9 +49,7 @@ This document outlines the steps taken to deploy **Keycloak** in the `identity` 
 #### Screenshots:
 ![ArgoCD Dashboard](./images/keycloak-2.png)
 ![ArgoCD Dashboard](./images/keycloak-3.png)
-![ArgoCD Dashboard](./images/keycloak-7.png)
 ![Keycloak Application](./images/keycloak-4.png)
-![Keycloak Application](./images/keycloak-5.png)
 ![Keycloak Application](./images/keycloak-6.png)
 ![Keycloak Application](./images/keycloak-7.png)
 ![Keycloak Application](./images/keycloak-8.png)

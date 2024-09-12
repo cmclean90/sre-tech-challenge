@@ -1,0 +1,106 @@
+# Enable Grafana as part of the stack
+grafana:
+  enabled: true
+  service:
+    type: ClusterIP
+
+  # Enable sidecar to auto-pickup dashboards from ConfigMaps
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana_dashboard
+      folder: /var/lib/grafana/dashboards/default
+
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: Prometheus
+          type: prometheus
+          access: proxy
+          url: http://prometheus-operated.observability.svc:9090
+        - name: Alertmanager
+          type: alertmanager
+          access: proxy
+          url: http://alertmanager-operated.observability.svc:9093
+
+# Prometheus settings
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelector: {}
+    podMonitorSelector: {}  # This enables PodMonitor support
+    podMonitorSelectorNilUsesHelmValues: false  # Disable Helm default label filtering
+    resources:
+      requests:
+        memory: 400Mi
+        cpu: 200m
+    retention: 10d
+    scrapeInterval: 15s  # Global scrape interval
+    externalLabels: 
+      monitor: 'my-monitor'
+
+# Alertmanager configuration
+alertmanager:
+  enabled: true
+  alertmanagerSpec:
+    resources:
+      requests:
+        memory: 100Mi
+        cpu: 100m
+    replicas: 1
+
+# Enabling ServiceMonitors for ArgoCD and Keycloak
+serviceMonitors:
+  enabled: true
+serviceMonitorNamespaceSelector: {}
+
+additionalServiceMonitors:
+  - name: argocd
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: argocd
+    namespaceSelector:
+      matchNames:
+        - argo
+    endpoints:
+      - port: metrics
+        interval: 30s
+
+  - name: keycloak
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: keycloak
+    namespaceSelector:
+      matchNames:
+        - identity
+    endpoints:
+      - port: http-metrics
+        interval: 30s
+        path: /metrics
+
+# Enabling Prometheus Operator
+prometheusOperator:
+  enabled: true
+  createCustomResource: true
+  tlsProxy:
+    enabled: false
+  admissionWebhooks:
+    enabled: true
+  resources:
+    requests:
+      memory: 200Mi
+      cpu: 100m
+
+  volumes:
+    - name: custom-dashboards
+      configMap:
+        name: custom-grafana-dashboards
+    - name: custom-alerts
+      configMap:
+        name: custom-grafana-alerts
+
+  volumeMounts:
+    - name: custom-dashboards
+      mountPath: /var/lib/grafana/dashboards
+    - name: custom-alerts
+      mountPath: /etc/grafana/provisioning/alertmanager

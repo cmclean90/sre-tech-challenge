@@ -30,6 +30,8 @@ spec:
             # Importing the realm configuration from the mounted ConfigMap.
             - name: KEYCLOAK_IMPORT
               value: "/config/myrealm.json"
+            - name: KEYCLOAK_METRICS_ENABLED
+              value: "true"
             # Injecting user passwords from Kubernetes secrets as environment variables.
             - name: TESTUSER1_PASSWORD
               valueFrom:

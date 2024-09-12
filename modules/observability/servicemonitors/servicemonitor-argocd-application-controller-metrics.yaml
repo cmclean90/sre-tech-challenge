@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: argocd-application-controller-metrics
+  namespace: argo 
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-application-controller
+      app.kubernetes.io/instance: argocd
+  namespaceSelector:
+    matchNames:
+      - argo
+  podMetricsEndpoints:
+  - port: metrics
+    path: /metrics
+    interval: 30s
