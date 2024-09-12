@@ -18,7 +18,7 @@ This repository contains the solutions to the SRE Tech Challenge.
 - **Testing**: Deployed a sample Helm application (`test-app`) to ensure ArgoCD was functioning correctly. The app's sync status and health were verified in the ArgoCD dashboard.
 - **Production Readiness**: Security, scalability, and disaster recovery considerations were documented for production environments.
 - **Related Pull Request**: [Task 2 PR](https://github.com/cmclean90/sre-tech-challenge/pull/3)
-- **Detailed Documentation**: [Task 2 Documentation](./documentation/task2_argocd_deployment.md)
+- **Detailed Documentation**: [Task 2 Documentation](./documentation/task2_argocd.md)
 
 ### Task 3: Deploy Keycloak for User Authentication with ArgoCD
 - **Status**: Completed
